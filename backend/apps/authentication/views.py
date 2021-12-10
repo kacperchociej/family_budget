@@ -4,13 +4,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.viewsets import ViewSet
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.authentication.serializers import LoginSerializer
+from apps.authentication.serializers import LoginSerializer, RegisterSerializer
+from apps.authentication.utils import get_response_token
 
 
 class AuthViewSet(ViewSet):
@@ -23,15 +24,7 @@ class AuthViewSet(ViewSet):
 
         user = authenticate(request, username=serializer.data['username'], password=serializer.data['password'])
 
-        refresh = RefreshToken.for_user(user)
-
-        response = Response(
-            data={'access': str(refresh.access_token)},
-            status=HTTP_200_OK
-        )
-        response.set_cookie('refresh_token', str(refresh), max_age=3600 * 24, httponly=True)
-
-        return response
+        return get_response_token(user, HTTP_200_OK)
 
     @action(detail=False, methods=['POST'], permission_classes=[IsAuthenticated, ])
     def logout(self, request):
@@ -54,13 +47,12 @@ class AuthViewSet(ViewSet):
             'refresh': refresh
         }
 
-        serializer = TokenRefreshSerializer(data=data)
-
         try:
             refresh = RefreshToken(refresh)
             user_id = refresh.get('user_id')
             user = get_object_or_404(User, pk=user_id)
 
+            serializer = TokenRefreshSerializer(data=data)
             serializer.is_valid(raise_exception=True)
         except TokenError:
             return Response(
@@ -68,12 +60,18 @@ class AuthViewSet(ViewSet):
                 status=HTTP_400_BAD_REQUEST
             )
 
-        refresh = RefreshToken.for_user(user)
+        return get_response_token(user, HTTP_200_OK)
 
-        response = Response(
-            data={'access': str(refresh.access_token)},
-            status=HTTP_200_OK
-        )
-        response.set_cookie('refresh_token', str(refresh), max_age=3600 * 24, httponly=True)
+    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
+    def register(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
 
-        return response
+        return get_response_token(user, HTTP_201_CREATED)
+
+    @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated, ])
+    def info(self, request):
+        user = request.user
+
+        return Response({'username': user.username}, HTTP_200_OK)
