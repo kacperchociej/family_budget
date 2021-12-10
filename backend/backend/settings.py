@@ -48,7 +48,9 @@ EXTERNAL_APPS = [
     'rest_framework'
 ]
 
-API_APPS = []
+API_APPS = [
+    'apps.budget'
+]
 
 INSTALLED_APPS = BASE_APPS + EXTERNAL_APPS + API_APPS
 
