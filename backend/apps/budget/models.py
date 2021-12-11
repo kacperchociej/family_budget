@@ -2,17 +2,23 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Category(models.Model):
+class ExpenseCategory(models.Model):
+    name = models.CharField(max_length=100)
+
+
+class IncomeCategory(models.Model):
     name = models.CharField(max_length=100)
 
 
 class Expense(models.Model):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(ExpenseCategory, null=True, on_delete=models.SET_NULL)
+    amount = models.IntegerField()
 
 
 class Income(models.Model):
     who = models.CharField(max_length=100)
+    category = models.ForeignKey(IncomeCategory, null=True, on_delete=models.SET_NULL)
     amount = models.IntegerField()
 
 
