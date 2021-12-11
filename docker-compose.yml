@@ -14,6 +14,8 @@ services:
             - DJANGO_SETTINGS_MODULE=backend.settings
             - ADMIN_LOGIN=devadmin
             - ADMIN_PASSWORD=devadmin
+            - TESTUSER_LOGIN=devtestuser
+            - TESTUSER_PASSWORD=devtestuser
             - ALLOWED_HOSTS=0.0.0.0
         links:
             - postgres
