@@ -23,6 +23,7 @@ class Income(models.Model):
 
 
 class Budget(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     month = models.CharField(max_length=10)
     year = models.IntegerField()
     incomes = models.ManyToManyField(Income)
@@ -31,15 +32,7 @@ class Budget(models.Model):
 
 
 class SharedBudget(models.Model):
-    OWNER = 'owner'
-    SHARED = 'shared'
-    SHARED_PERMISSION = [
-        (OWNER, 'Owner'),
-        (SHARED, 'Shared')
-    ]
-
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='budget_access')
     shared_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='shared_access')
     granted_at = models.DateTimeField(auto_now_add=True)
-    shared_permission = models.CharField(max_length=10, choices=SHARED_PERMISSION, default=OWNER)

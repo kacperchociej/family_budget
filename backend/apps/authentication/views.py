@@ -4,7 +4,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
+    HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ViewSet
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -24,6 +25,12 @@ class AuthViewSet(ViewSet):
 
         user = authenticate(request, username=serializer.data['username'], password=serializer.data['password'])
 
+        if user is None:
+            return Response(
+                data={'detail': 'User is unauthorised.'},
+                status=HTTP_401_UNAUTHORIZED
+            )
+
         return get_response_token(user, HTTP_200_OK)
 
     @action(detail=False, methods=['POST'], permission_classes=[IsAuthenticated, ])
@@ -36,7 +43,7 @@ class AuthViewSet(ViewSet):
             return Response(status=HTTP_204_NO_CONTENT)
         except TokenError:
             return Response(
-                data={'message': 'Token is invalid or expired.'},
+                data={'detail': 'Token is invalid or expired.'},
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -56,7 +63,7 @@ class AuthViewSet(ViewSet):
             serializer.is_valid(raise_exception=True)
         except TokenError:
             return Response(
-                data={'message': 'Token is invalid or expired.'},
+                data={'detail': 'Token is invalid or expired.'},
                 status=HTTP_400_BAD_REQUEST
             )
 

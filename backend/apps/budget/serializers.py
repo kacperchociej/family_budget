@@ -3,7 +3,7 @@ from datetime import date
 from django.db.models import Sum
 from rest_framework import serializers
 
-from apps.budget.models import Budget, ExpenseCategory, IncomeCategory, Expense, Income
+from apps.budget.models import Budget, ExpenseCategory, IncomeCategory, Expense, Income, SharedBudget
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
@@ -19,6 +19,8 @@ class IncomeSerializer(serializers.ModelSerializer):
 
 
 class BudgetSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(read_only=True)
+
     total_income = serializers.SerializerMethodField(read_only=True)
     total_expense = serializers.SerializerMethodField(read_only=True)
 
@@ -27,7 +29,7 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Budget
-        fields = ['pk', 'month', 'year', 'incomes', 'expenses', 'total_income', 'total_expense', 'created_at']
+        fields = ['pk', 'user', 'month', 'year', 'incomes', 'expenses', 'total_income', 'total_expense', 'created_at']
 
     def validate_month(self, value):
         months = [
@@ -36,7 +38,7 @@ class BudgetSerializer(serializers.ModelSerializer):
         ]
 
         if value.capitalize() not in months:
-            raise serializers.ValidationError({'message': 'Invalid month given.'})
+            raise serializers.ValidationError({'detail': 'Invalid month given.'})
 
         return value
 
@@ -45,7 +47,7 @@ class BudgetSerializer(serializers.ModelSerializer):
 
         if value < 2000 or value > today.year:
             raise serializers.ValidationError(
-                {'message': f'Invalid year given. Year must be between 2000 and {today.year}.'}
+                {'detail': f'Invalid year given. Year must be between 2000 and {today.year}.'}
             )
 
         return value
@@ -72,3 +74,26 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     def get_total_expense(self, obj):
         return obj.expenses.all().aggregate(Sum('amount'))['amount__sum'] or 0
+
+
+class GrantBudgetAccessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SharedBudget
+        fields = ['user']
+
+    def create(self, validated_data):
+        user = validated_data['user']
+        budget = validated_data['budget']
+        if SharedBudget.objects.filter(user=user, budget=budget).exists():
+            raise serializers.ValidationError({'detail': 'Given user already has access to this budget.'})
+
+        return super().create(validated_data)
+
+
+class SharedBudgetSerializer(serializers.ModelSerializer):
+    budget = BudgetSerializer()
+    shared_by = serializers.CharField(source='shared_by.username', read_only=True)
+
+    class Meta:
+        model = SharedBudget
+        fields = ['budget', 'shared_by', 'granted_at']
