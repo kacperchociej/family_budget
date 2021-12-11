@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+    postgres:
+        image: postgres:10.0
+    api:
+        build: backend/
+        command: ./entrypoint.sh
+        ports:
+            - 8010:8000
+        volumes:
+            - ./backend:/code
+        environment:
+            - DEBUG=true
+            - DJANGO_SETTINGS_MODULE=backend.settings
+            - ADMIN_LOGIN=devadmin
+            - ADMIN_PASSWORD=devadmin
+            - ALLOWED_HOSTS=0.0.0.0
+        links:
+            - postgres
+        depends_on:
+            - postgres
