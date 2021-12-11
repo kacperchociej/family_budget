@@ -24,4 +24,4 @@ def get_shared_users(budget):
 
 
 def get_budgets_shared_with_me(user):
-    return list(SharedBudget.objects.filter(user=user))
+    return SharedBudget.objects.filter(user=user)

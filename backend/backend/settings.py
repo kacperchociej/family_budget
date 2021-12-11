@@ -43,7 +43,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    'PAGE_SIZE': 5
 }
 
 SIMPLE_JWT = {
@@ -67,7 +68,8 @@ BASE_APPS = [
 
 EXTERNAL_APPS = [
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'django_filters'
 ]
 
 API_APPS = [

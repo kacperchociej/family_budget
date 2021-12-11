@@ -6,6 +6,18 @@ from rest_framework import serializers
 from apps.budget.models import Budget, ExpenseCategory, IncomeCategory, Expense, Income, SharedBudget
 
 
+class ExpenseCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseCategory
+        fields = ['pk', 'name']
+
+
+class IncomeCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncomeCategory
+        fields = ['pk', 'name']
+
+
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
@@ -34,10 +46,11 @@ class BudgetSerializer(serializers.ModelSerializer):
     def validate_month(self, value):
         months = [
             'January', 'February', 'March', 'April', 'May', 'June', 'July',
-            'August', 'Septemper', 'October', 'November', 'December'
+            'August', 'September', 'October', 'November', 'December'
         ]
 
-        if value.capitalize() not in months:
+        value = value.capitalize()
+        if value not in months:
             raise serializers.ValidationError({'detail': 'Invalid month given.'})
 
         return value
