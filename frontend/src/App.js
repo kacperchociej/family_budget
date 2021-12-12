@@ -10,6 +10,7 @@ import AuthService from "./services/auth.service";
 import Home from "./components/home.component";
 import Login from "./components/login.component";
 import Logout from "./components/logout.component";
+import Register from "./components/register.component";
 
 class App extends Component {
   constructor(props) {
@@ -57,9 +58,9 @@ class App extends Component {
                 <li className="nav-item">
                   <Link to={"/login"} className="nav-link">Login</Link>
                 </li>
-                {/* <li className="nav-item">
+                <li className="nav-item">
                   <Link to={"/register"} className="nav-link">Register</Link>
-                </li> */}
+                </li>
               </div>
             )}
           </div>
@@ -72,7 +73,7 @@ class App extends Component {
                 <Route path='/' component={Home}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/logout" component={Logout}/>
-                {/* <Route path="/register" component={Register} /> */}
+                <Route path="/register" component={Register} />
           </div>
         </div>
       </div>

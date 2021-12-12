@@ -13,20 +13,22 @@ const required = value => {
   }
 };
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
+export default class Register extends Component {
+    constructor(props) {
+      super(props);
 
-    this.handleLogin = this.handleLogin.bind(this);
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
+      this.handleRegister = this.handleRegister.bind(this);
+      this.onChangeUsername = this.onChangeUsername.bind(this);
+      this.onChangePassword = this.onChangePassword.bind(this);
+      this.onChangePassword2 = this.onChangePassword2.bind(this);
 
-    this.state = {
-      username: '',
-      password: '',
-      message: ''
+      this.state = {
+        username: '',
+        password: '',
+        password2: '',
+        message: ''
+      }
     }
-  }
 
   onChangeUsername(e) {
     this.setState({
@@ -40,7 +42,13 @@ export default class Login extends Component {
     })
   }
 
-  handleLogin(e) {
+  onChangePassword2(e) {
+    this.setState({
+      password2: e.target.value
+    })
+  }
+
+  handleRegister(e) {
     e.preventDefault();
 
     this.setState({
@@ -50,7 +58,7 @@ export default class Login extends Component {
     this.form.validateAll();
 
     if (this.checkBtn.context._errors.length === 0) {
-      AuthService.login(this.state.username, this.state.password)
+      AuthService.register(this.state.username, this.state.password, this.state.password2)
       .then(() => {
           this.props.history.push('/');
           window.location.reload();
@@ -73,8 +81,9 @@ export default class Login extends Component {
     return (
       <div className="card card-container">
         <div className="card-body">
-          <h3 className="card-title">Login</h3>
-          <Form onSubmit={this.handleLogin} ref={c => this.form = c}>
+          <h3 className="card-title">Register</h3>
+
+          <Form onSubmit={this.handleRegister} ref={c => this.form = c}>
             {this.state.message && (
               <div className="form-group">
                 <div className="alert alert-danger" role="alert">{this.state.message}</div>
@@ -92,10 +101,16 @@ export default class Login extends Component {
               <Input type="password" className="form-control" name="password" value={this.state.password} onChange={this.onChangePassword} validations={[required]}>
               </Input>
             </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Repeat password</label>
+              <Input type="password" className="form-control" name="password2" value={this.state.password2} onChange={this.onChangePassword2} validations={[required]}>
+              </Input>
+            </div>
             <br/>
 
             <div className="form-group">
-              <button className="btn btn-primary btn-block">Login</button>
+              <button className="btn btn-primary btn-block">Register</button>
             </div>
 
             <CheckButton
@@ -109,4 +124,5 @@ export default class Login extends Component {
       </div>
     )
   }
+    
 }

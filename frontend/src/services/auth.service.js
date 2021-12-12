@@ -36,6 +36,11 @@ class AuthService {
       }
 
       return response.data;
+    })
+    .catch(error => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh_token');
     });
   }
 
