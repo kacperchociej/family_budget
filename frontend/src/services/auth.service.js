@@ -25,7 +25,9 @@ class AuthService {
   }
 
   refresh() {
-    return axios.post(API_URL + 'refresh/', {})
+    let refresh_token = JSON.parse(localStorage.getItem('refresh_token'));
+    console.log(refresh_token);
+    return axios.post(API_URL + 'refresh/', {refresh_token: refresh_token})
     .then(response => {
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -39,11 +41,6 @@ class AuthService {
 
       return response.data;
     })
-    .catch(error => {
-      localStorage.removeItem('user');
-      localStorage.removeItem('access');
-      localStorage.removeItem('refresh_token');
-    });
   }
 
   register(username, password, password2) {

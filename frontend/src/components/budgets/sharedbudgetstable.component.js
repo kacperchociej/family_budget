@@ -80,7 +80,6 @@ export default class SharedBudgetsTable extends Component {
         });
       },
       error => {
-        console.log(error.response.data);
         if (error.response.data.code === 'token_not_valid') {
           AuthService.logout().then(() => {
             this.props.history.push('/login');
