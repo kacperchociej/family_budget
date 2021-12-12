@@ -32,6 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-%hkvz&8@th5h@1uh*47ds
 DEBUG = str2bool(os.environ.get('DEBUG', 'False'))
 
 ALLOWED_HOSTS = [host for host in os.environ.get('ALLOWED_HOSTS', '*').split(',') if host]
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # REST and JWT configuration
@@ -69,7 +70,8 @@ BASE_APPS = [
 EXTERNAL_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'django_filters'
+    'django_filters',
+    'corsheaders'
 ]
 
 API_APPS = [
@@ -80,6 +82,7 @@ API_APPS = [
 INSTALLED_APPS = BASE_APPS + EXTERNAL_APPS + API_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
