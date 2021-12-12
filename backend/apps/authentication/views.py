@@ -16,9 +16,9 @@ from apps.authentication.utils import get_response_token
 
 
 class AuthViewSet(ViewSet):
-    permission_classes = []
+    permission_classes = [AllowAny, ]
 
-    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
+    @action(detail=False, methods=['POST'])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -33,7 +33,7 @@ class AuthViewSet(ViewSet):
 
         return get_response_token(user, HTTP_200_OK)
 
-    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
+    @action(detail=False, methods=['POST'])
     def logout(self, request):
         try:
             refresh = request.data.get('refresh_token', '')
@@ -47,7 +47,7 @@ class AuthViewSet(ViewSet):
                 status=HTTP_400_BAD_REQUEST
             )
 
-    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
+    @action(detail=False, methods=['POST'])
     def refresh(self, request):
         refresh = request.data.get('refresh_token', '')
         data = {
@@ -69,7 +69,7 @@ class AuthViewSet(ViewSet):
 
         return get_response_token(user, HTTP_200_OK)
 
-    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
+    @action(detail=False, methods=['POST'])
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

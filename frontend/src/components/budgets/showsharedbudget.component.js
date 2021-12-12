@@ -85,7 +85,7 @@ export default class ShowSharedBudget extends Component {
                     { budget.incomes && budget.incomes.map(income => 
                       <tr key={income.pk}>
                         <td>{income.who}</td>
-                        <td>{income.category}</td>
+                        <td>{income.category_name}</td>
                         <td>{income.amount}</td>
                       </tr>
                     )}
@@ -105,7 +105,7 @@ export default class ShowSharedBudget extends Component {
                     { budget.expenses && budget.expenses.map(expense => 
                       <tr key={expense.pk}>
                         <td>{expense.name}</td>
-                        <td>{expense.category}</td>
+                        <td>{expense.category_name}</td>
                         <td>{expense.amount}</td>
                       </tr>
                     )}

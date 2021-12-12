@@ -19,15 +19,19 @@ class IncomeCategorySerializer(serializers.ModelSerializer):
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name', read_only=True)
+
     class Meta:
         model = Expense
-        fields = ['pk', 'name', 'category', 'amount']
+        fields = ['pk', 'name', 'category', 'category_name', 'amount']
 
 
 class IncomeSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name', read_only=True)
+
     class Meta:
         model = Income
-        fields = ['pk', 'who', 'category', 'amount']
+        fields = ['pk', 'who', 'category', 'category_name', 'amount']
 
 
 class BudgetSerializer(serializers.ModelSerializer):
