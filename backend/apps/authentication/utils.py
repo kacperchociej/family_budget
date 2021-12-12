@@ -9,10 +9,14 @@ def get_response_token(user, status):
     refresh = RefreshToken.for_user(user)
 
     response = Response(
-        data={'access': str(refresh.access_token)},
+        data={
+            'user': user.username,
+            'access': str(refresh.access_token),
+            'refresh_token': str(refresh)
+        },
         status=status
     )
-    response.set_cookie('refresh_token', str(refresh), max_age=3600 * 24, httponly=True)
+    # response.set_cookie('refresh_token', str(refresh), max_age=3600 * 24, httponly=True)
 
     return response
 

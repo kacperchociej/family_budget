@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
     HTTP_401_UNAUTHORIZED
@@ -33,10 +33,10 @@ class AuthViewSet(ViewSet):
 
         return get_response_token(user, HTTP_200_OK)
 
-    @action(detail=False, methods=['POST'], permission_classes=[IsAuthenticated, ])
+    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
     def logout(self, request):
         try:
-            refresh = request.COOKIES.get('refresh_token', '')
+            refresh = request.data.get('refresh_token', '')
             token = RefreshToken(refresh)
             token.blacklist()
 
@@ -49,7 +49,7 @@ class AuthViewSet(ViewSet):
 
     @action(detail=False, methods=['POST'], permission_classes=[AllowAny, ])
     def refresh(self, request):
-        refresh = request.COOKIES.get('refresh_token', '')
+        refresh = request.data.get('refresh_token', '')
         data = {
             'refresh': refresh
         }
@@ -76,9 +76,3 @@ class AuthViewSet(ViewSet):
         user = serializer.save()
 
         return get_response_token(user, HTTP_201_CREATED)
-
-    @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated, ])
-    def info(self, request):
-        user = request.user
-
-        return Response({'username': user.username}, HTTP_200_OK)
