@@ -1,5 +1,4 @@
 import axios from "axios";
-import authHeader from './auth-header';
 
 const API_URL = "http://0.0.0.0:8010/api/auth/";
 
@@ -26,7 +25,9 @@ class AuthService {
   }
 
   refresh() {
-    return axios.post(API_URL + 'refresh/', {})
+    let refresh_token = JSON.parse(localStorage.getItem('refresh_token'));
+    console.log(refresh_token);
+    return axios.post(API_URL + 'refresh/', {refresh_token: refresh_token})
     .then(response => {
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -34,14 +35,12 @@ class AuthService {
       if (response.data.access) {
         localStorage.setItem('access', JSON.stringify(response.data.access));
       }
+      if (response.data.refresh_token) {
+        localStorage.setItem('refresh_token', JSON.stringify(response.data.refresh_token));
+      }
 
       return response.data;
     })
-    .catch(error => {
-      localStorage.removeItem('user');
-      localStorage.removeItem('access');
-      localStorage.removeItem('refresh_token');
-    });
   }
 
   register(username, password, password2) {
