@@ -9,32 +9,86 @@ export default class SharedBudgetsTable extends Component {
 
     this.onClickPreviousNext = this.onClickPreviousNext.bind(this);
 
+    this.onChangeBudgetUsername = this.onChangeBudgetUsername.bind(this);
+    this.onChangeBudgetMonth = this.onChangeBudgetMonth.bind(this);
+    this.onChangeBudgetYear = this.onChangeBudgetYear.bind(this);
+    this.handleFilterBudgets = this.handleFilterBudgets.bind(this);
+
     this.state = {
-      sharedBudgets: ''
+      sharedBudgets: '',
+      budgetUsername: '',
+      budgetMonth: '',
+      budgetYear: null
     };
   }
 
-  componentDidMount() {
-    let access = localStorage.getItem('access');
-    
-    if (access) {
-      BudgetService.getSharedBudgets().then(
-        response => {
-          this.setState({
-            sharedBudgets: response.data
-          });
-        },
-        error => {
-          console.log(error.response.data);
-          if (error.response.data.code === 'token_not_valid') {
-            AuthService.logout().then(() => {
-              this.props.history.push('/login');
-              window.location.reload();
-            })
-          }
-        }
-      );
+  onChangeBudgetUsername(e) {
+    this.setState({
+      budgetUsername: e.target.value
+    })
+  }
+
+  onChangeBudgetMonth(e) {
+    this.setState({
+      budgetMonth: e.target.value
+    })
+  }
+
+  onChangeBudgetYear(e) {
+    this.setState({
+      budgetYear: e.target.value
+    })
+  }
+
+  handleFilterBudgets() {
+    let params = [];
+    let { budgetUsername, budgetMonth, budgetYear } = this.state;
+    if (budgetUsername) {
+      params.push('username=' + budgetUsername);
     }
+    if (budgetMonth) {
+      params.push('month=' + budgetMonth);
+    }
+    if (budgetYear) {
+      params.push('year=' + budgetYear);
+    }
+    params = '?' + params.join('&')
+    
+    BudgetService.getSharedBudgets(params).then(
+      response => {
+        this.setState({
+          sharedBudgets: response.data
+        });
+      },
+      error => {
+        console.log(error.response.data);
+        if (error.response.data.code === 'token_not_valid') {
+          AuthService.logout().then(() => {
+            this.props.history.push('/login');
+            window.location.reload();
+          })
+        }
+      }
+    );
+  }
+
+  componentDidMount() {
+    BudgetService.getSharedBudgets('').then(
+      response => {
+        this.setState({
+          sharedBudgets: response.data
+        });
+      },
+      error => {
+        console.log(error.response.data);
+        if (error.response.data.code === 'token_not_valid') {
+          AuthService.logout().then(() => {
+            this.props.history.push('/login');
+            window.location.reload();
+          })
+        }
+      }
+    );
   }
 
   onClickPreviousNext(url) {
@@ -66,6 +120,19 @@ export default class SharedBudgetsTable extends Component {
     
     return (
         <div>
+          <h5>Filters</h5>
+          <div>
+            <span className="d-inline">User</span>&nbsp;
+            <input type="text" name="budgetUsername" style={{width: "100px"}} value={this.state.budgetUsername} onChange={this.onChangeBudgetUsername} >
+            </input>&nbsp;
+            <span className="d-inline">Month</span>&nbsp;
+            <input type="text" name="budgetMonth" style={{width: "100px"}} value={this.state.budgetMonth} onChange={this.onChangeBudgetMonth} >
+            </input>&nbsp;
+            <span className="d-inline">Year</span>&nbsp;
+            <input type="number" name="budgetYear" style={{width: "100px"}} value={this.state.budgetYear} onChange={this.onChangeBudgetYear} >
+            </input>&nbsp;
+            <button className="btn btn-outline-success btn-sm" onClick={this.handleFilterBudgets}>Filter</button>
+          </div>
           <table className="table">
             <thead>
               <tr>

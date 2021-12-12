@@ -4,8 +4,8 @@ import authHeader from './auth-header';
 const API_URL = "http://0.0.0.0:8010/api/budgets/";
 
 class BudgetService {
-    getBudgets() {
-      return axios.get(API_URL, { headers: authHeader() })
+    getBudgets(params) {
+      return axios.get(API_URL + params, { headers: authHeader() })
     }
     getBudgetsByUrl(url) {
       return axios.get(url, { headers: authHeader() })
@@ -37,8 +37,8 @@ class BudgetService {
     getSharedBudget(id) {
       return axios.get(API_URL + 'shared/me/' + id, { headers: authHeader() })
     }
-    getSharedBudgets() {
-      return axios.get(API_URL + 'shared/me/', { headers: authHeader() })
+    getSharedBudgets(params) {
+      return axios.get(API_URL + 'shared/me/' + params, { headers: authHeader() })
     }
     getSharedBudgetsByUrl(url) {
       return axios.get(url, { headers: authHeader() })

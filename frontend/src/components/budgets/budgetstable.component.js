@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import BudgetService from "../../services/budget.service";
 import AuthService from "../../services/auth.service";
 import { Link } from "react-router-dom";
+import Input from "react-validation/build/input";
 
 export default class BudgetsTable extends Component {
   constructor(props) {
@@ -10,55 +11,95 @@ export default class BudgetsTable extends Component {
     this.onClickPreviousNext = this.onClickPreviousNext.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
 
+    this.onChangeBudgetMonth = this.onChangeBudgetMonth.bind(this);
+    this.onChangeBudgetYear = this.onChangeBudgetYear.bind(this);
+    this.handleFilterBudgets = this.handleFilterBudgets.bind(this);
+
     this.state = {
-      budgets: ''
+      budgets: '',
+      filter: '',
+      budgetMonth: '',
+      budgetYear: null
     };
   }
 
-  componentDidMount() {
-    let access = localStorage.getItem('access');
-    
-    if (access) {
-      BudgetService.getBudgets().then(
-        response => {
-          this.setState({
-            budgets: response.data
-          });
-        },
-        error => {
-          console.log(error.response.data);
-          if (error.response.data.code === 'token_not_valid') {
-            AuthService.logout().then(() => {
-              this.props.history.push('/login');
-              window.location.reload();
-            })
-          }
-        }
-      );
+  onChangeBudgetMonth(e) {
+    this.setState({
+      budgetMonth: e.target.value
+    })
+  }
+
+  onChangeBudgetYear(e) {
+    this.setState({
+      budgetYear: e.target.value
+    })
+  }
+
+  handleFilterBudgets() {
+    let params = [];
+    let { budgetMonth, budgetYear } = this.state;
+    if (budgetMonth) {
+      params.push('month=' + budgetMonth);
     }
+    if (budgetYear) {
+      params.push('year=' + budgetYear);
+    }
+    params = '?' + params.join('&')
+
+    BudgetService.getBudgets(params).then(
+      response => {
+        this.setState({
+          budgets: response.data
+        });
+      },
+      error => {
+        console.log(error.response.data);
+        if (error.response.data.code === 'token_not_valid') {
+          AuthService.logout().then(() => {
+            this.props.history.push('/login');
+            window.location.reload();
+          })
+        }
+      }
+    );
+  }
+
+  componentDidMount() {
+    BudgetService.getBudgets('').then(
+      response => {
+        this.setState({
+          budgets: response.data
+        });
+      },
+      error => {
+        console.log(error.response.data);
+        if (error.response.data.code === 'token_not_valid') {
+          AuthService.logout().then(() => {
+            this.props.history.push('/login');
+            window.location.reload();
+          })
+        }
+      }
+    );
   }
 
   onClickPreviousNext(url) {
-    let access = localStorage.getItem('access');
-    
-    if (access) {
-      BudgetService.getBudgetsByUrl(url).then(
-        response => {
-          this.setState({
-            budgets: response.data
-          });
-        },
-        error => {
-          console.log(error.response.data);
-          if (error.response.data.code === 'token_not_valid') {
-            AuthService.logout().then(() => {
-              this.props.history.push('/login');
-              window.location.reload();
-            })
-          }
+    BudgetService.getBudgetsByUrl(url).then(
+      response => {
+        this.setState({
+          budgets: response.data
+        });
+      },
+      error => {
+        console.log(error.response.data);
+        if (error.response.data.code === 'token_not_valid') {
+          AuthService.logout().then(() => {
+            this.props.history.push('/login');
+            window.location.reload();
+          })
         }
-      );
-    }
+      }
+    );
   }
 
   handleDelete(id) {
@@ -84,6 +125,16 @@ export default class BudgetsTable extends Component {
     
     return (
       <div>
+        <h5>Filters</h5>
+        <div>
+          <span className="d-inline">Month</span>&nbsp;
+          <input type="text" name="budgetMonth" style={{width: "100px"}} value={this.state.budgetMonth} onChange={this.onChangeBudgetMonth} >
+          </input>&nbsp;
+          <span className="d-inline">Year</span>&nbsp;
+          <input type="number" name="budgetYear" style={{width: "100px"}} value={this.state.budgetYear} onChange={this.onChangeBudgetYear} >
+          </input>&nbsp;
+          <button className="btn btn-outline-success btn-sm" onClick={this.handleFilterBudgets}>Filter</button>
+        </div>
         <table className="table">
           <thead>
             <tr>
