@@ -41,7 +41,9 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Budget
-        fields = ['pk', 'user', 'month', 'year', 'incomes', 'expenses', 'total_income', 'total_expense', 'created_at']
+        fields = [
+            'pk', 'name', 'user', 'month', 'year', 'incomes', 'expenses', 'total_income', 'total_expense', 'created_at'
+        ]
 
     def validate_month(self, value):
         months = [

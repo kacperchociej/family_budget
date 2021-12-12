@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import AuthService from "./services/auth.service";
 
-import Home from "./components/home.component";
+import Budgets from "./components/budgets.component";
 import Login from "./components/login.component";
 import Logout from "./components/logout.component";
 import Register from "./components/register.component";
@@ -44,7 +44,13 @@ class App extends Component {
           <div className="container">
             <Link to={"/"} className="navbar-brand">Family budget</Link>
 
-            <div className="navbar-nav mr-auto"></div>
+            <div className="navbar-nav mr-auto">
+              {user && (
+                <li className="nav-item">
+                  <Link to={"/budgets"} className="nav-link">Budgets</Link>
+                </li>
+              )}
+            </div>
 
             {user ? (
               <div className="navbar-nav ml-auto">
@@ -70,10 +76,10 @@ class App extends Component {
         
         <div className="container">
           <div className="jumbotron">
-                <Route path='/' component={Home}/>
-                <Route path="/login" component={Login}/>
-                <Route path="/logout" component={Logout}/>
-                <Route path="/register" component={Register} />
+            <Route path='/budgets' component={Budgets}/>
+            <Route path="/login" component={Login}/>
+            <Route path="/logout" component={Logout}/>
+            <Route path="/register" component={Register} />
           </div>
         </div>
       </div>

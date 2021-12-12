@@ -1,5 +1,4 @@
 import axios from "axios";
-import authHeader from './auth-header';
 
 const API_URL = "http://0.0.0.0:8010/api/auth/";
 
@@ -33,6 +32,9 @@ class AuthService {
       }
       if (response.data.access) {
         localStorage.setItem('access', JSON.stringify(response.data.access));
+      }
+      if (response.data.refresh_token) {
+        localStorage.setItem('refresh_token', JSON.stringify(response.data.refresh_token));
       }
 
       return response.data;

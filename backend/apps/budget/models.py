@@ -23,6 +23,7 @@ class Income(models.Model):
 
 
 class Budget(models.Model):
+    name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     month = models.CharField(max_length=10)
     year = models.IntegerField()
