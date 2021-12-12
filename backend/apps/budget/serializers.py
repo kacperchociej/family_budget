@@ -111,4 +111,4 @@ class SharedBudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SharedBudget
-        fields = ['budget', 'shared_by', 'granted_at']
+        fields = ['pk', 'budget', 'shared_by', 'granted_at']

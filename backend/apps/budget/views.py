@@ -94,3 +94,17 @@ class BudgetViewSet(ModelViewSet):
             data=serializer.data,
             status=HTTP_200_OK
         )
+
+    @action(detail=False, methods=['GET'], url_path='shared/me/(?P<access_id>[\w\-]+)')
+    def get_shared_budget(self, request, access_id=None):
+        user = request.user
+        shared_budget = get_object_or_404(SharedBudget, pk=access_id)
+        if user != shared_budget.user:
+            raise PermissionDenied()
+
+        serializer = SharedBudgetSerializer(shared_budget)
+
+        return Response(
+            data=serializer.data,
+            status=HTTP_200_OK
+        )

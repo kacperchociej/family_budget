@@ -16,6 +16,8 @@ class BudgetService {
     shareBudget() {}
     getSharedPeople() {}
     revokeBudgetAccess() {}
+    getSharedBudget(id) {
+      return axios.get(API_URL + 'shared/me/' + id, { headers: authHeader() })}
     getSharedBudgets() {
       return axios.get(API_URL + 'shared/me/', { headers: authHeader() })
     }

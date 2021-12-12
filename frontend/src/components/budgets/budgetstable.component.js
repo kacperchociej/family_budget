@@ -86,7 +86,7 @@ export default class BudgetsTable extends Component {
                 <td>{budget.year}</td>
                 <td>{budget.incomes.length}</td>
                 <td>{budget.expenses.length}</td>
-                <td>{new Date(budget.created_at).toLocaleDateString()}</td>
+                <td>{new Date(budget.created_at).toLocaleTimeString() + ' ' + new Date(budget.created_at).toLocaleDateString()}</td>
                 <td>TBA</td>
               </tr>
             )}
