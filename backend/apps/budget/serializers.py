@@ -6,16 +6,32 @@ from rest_framework import serializers
 from apps.budget.models import Budget, ExpenseCategory, IncomeCategory, Expense, Income, SharedBudget
 
 
+class ExpenseCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseCategory
+        fields = ['pk', 'name']
+
+
+class IncomeCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncomeCategory
+        fields = ['pk', 'name']
+
+
 class ExpenseSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name', read_only=True)
+
     class Meta:
         model = Expense
-        fields = ['pk', 'name', 'category', 'amount']
+        fields = ['pk', 'name', 'category', 'category_name', 'amount']
 
 
 class IncomeSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name', read_only=True)
+
     class Meta:
         model = Income
-        fields = ['pk', 'who', 'category', 'amount']
+        fields = ['pk', 'who', 'category', 'category_name', 'amount']
 
 
 class BudgetSerializer(serializers.ModelSerializer):
@@ -29,15 +45,18 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Budget
-        fields = ['pk', 'user', 'month', 'year', 'incomes', 'expenses', 'total_income', 'total_expense', 'created_at']
+        fields = [
+            'pk', 'name', 'user', 'month', 'year', 'incomes', 'expenses', 'total_income', 'total_expense', 'created_at'
+        ]
 
     def validate_month(self, value):
         months = [
             'January', 'February', 'March', 'April', 'May', 'June', 'July',
-            'August', 'Septemper', 'October', 'November', 'December'
+            'August', 'September', 'October', 'November', 'December'
         ]
 
-        if value.capitalize() not in months:
+        value = value.capitalize()
+        if value not in months:
             raise serializers.ValidationError({'detail': 'Invalid month given.'})
 
         return value
@@ -96,4 +115,4 @@ class SharedBudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SharedBudget
-        fields = ['budget', 'shared_by', 'granted_at']
+        fields = ['pk', 'budget', 'shared_by', 'granted_at']
