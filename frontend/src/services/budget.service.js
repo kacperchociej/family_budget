@@ -14,7 +14,9 @@ class BudgetService {
       return axios.get(API_URL + id, { headers: authHeader() })
     }
     addBudget() {}
-    removeBudget() {}
+    removeBudget(id) {
+      return axios.delete(API_URL + id + '/', { headers: authHeader() })
+    }
     shareBudget() {}
     revokeBudgetAccess(id) {
       return axios.delete(API_URL + 'revoke/' + id + '/', { headers: authHeader() })

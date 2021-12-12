@@ -8,6 +8,7 @@ export default class BudgetsTable extends Component {
     super(props);
 
     this.onClickPreviousNext = this.onClickPreviousNext.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 
     this.state = {
       budgets: ''
@@ -60,6 +61,23 @@ export default class BudgetsTable extends Component {
     }
   }
 
+  handleDelete(id) {
+    BudgetService.removeBudget(id).then(
+      response => {
+        window.location.reload();
+      },
+      error => {
+        console.log(error.response.data);
+        if (error.response.data.code === 'token_not_valid') {
+          AuthService.logout().then(() => {
+            this.props.history.push('/login');
+            window.location.reload();
+          })
+        }
+      }
+    );
+  }
+
   render() {
     const { budgets } = this.state;
     const results = budgets.results;
@@ -89,7 +107,7 @@ export default class BudgetsTable extends Component {
                 <td>{new Date(budget.created_at).toLocaleTimeString() + ' ' + new Date(budget.created_at).toLocaleDateString()}</td>
                 <td>
                   <Link to={"budget/" + budget.pk} className="btn btn-outline-primary btn-sm">Show</Link>
-                  <Link to={"delete/" + budget.pk} className="btn btn-outline-danger btn-sm">Delete</Link>
+                  <button type="button" className="btn btn-outline-danger btn-sm" onClick={() => this.handleDelete(budget.pk)}>Delete</button>
                 </td>
               </tr>
             )}

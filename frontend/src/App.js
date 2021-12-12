@@ -46,13 +46,16 @@ class App extends Component {
           <div className="container">
             <Link to={"/"} className="navbar-brand">Family budget</Link>
 
-            <div className="navbar-nav mr-auto">
-              {user && (
-                <li className="nav-item">
-                  <Link to={"/budgets"} className="nav-link">Budgets</Link>
-                </li>
-              )}
-            </div>
+            {user && (
+              <div className="navbar-nav mr-auto">
+                  <li className="nav-item">
+                    <Link to={"/budgets"} className="nav-link">Budgets</Link>
+                  </li>
+                  <li className='nav-item'>
+                    <Link to={"/budgets/new"} className="nav-link">Add new budget</Link>
+                  </li>
+              </div>
+            )}
 
             {user ? (
               <div className="navbar-nav ml-auto">
