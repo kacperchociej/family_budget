@@ -86,7 +86,7 @@ export default class SharedBudgetsTable extends Component {
                   <td>{shared.shared_by}</td>
                   <td>{new Date(shared.granted_at).toLocaleTimeString() + ' ' + new Date(shared.granted_at).toLocaleDateString()}</td>
                   <td>
-                      <Link to={"shared/" + shared.pk} className="btn btn-outline-primary">Show</Link>
+                      <Link to={"shared/" + shared.pk} className="btn btn-outline-primary btn-sm">Show</Link>
                   </td>
                 </tr>
               )}

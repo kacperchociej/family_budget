@@ -12,6 +12,7 @@ import Login from "./components/login.component";
 import Logout from "./components/logout.component";
 import Register from "./components/register.component";
 import ShowSharedBudget from './components/budgets/showsharedbudget.component';
+import ShowBudget from './components/budgets/showbudget.component';
 
 class App extends Component {
   constructor(props) {
@@ -82,6 +83,7 @@ class App extends Component {
             <Route path="/logout" component={Logout}/>
             <Route path="/register" component={Register} />
             <Route path="/shared/:id" component={ShowSharedBudget} />
+            <Route path="/budget/:id" component={ShowBudget} />
           </div>
         </div>
       </div>

@@ -13,7 +13,6 @@ export default class ShowSharedBudget extends Component {
   }
 
   componentDidMount() {
-    let access = localStorage.getItem('access');
     var id = this.props.match.params.id;
 
     BudgetService.getSharedBudget(id).then(
@@ -84,7 +83,7 @@ export default class ShowSharedBudget extends Component {
                   </thead>
                   <tbody>
                     { budget.incomes && budget.incomes.map(income => 
-                      <tr>
+                      <tr key={income.pk}>
                         <td>{income.who}</td>
                         <td>{income.category}</td>
                         <td>{income.amount}</td>
@@ -96,13 +95,15 @@ export default class ShowSharedBudget extends Component {
                 <h3>Expenses</h3>
                 <table className="table">
                   <thead>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Amount</th>
+                    <tr>
+                      <th>Name</th>
+                      <th>Category</th>
+                      <th>Amount</th>
+                    </tr>
                   </thead>
                   <tbody>
                     { budget.expenses && budget.expenses.map(expense => 
-                      <tr>
+                      <tr key={expense.pk}>
                         <td>{expense.name}</td>
                         <td>{expense.category}</td>
                         <td>{expense.amount}</td>

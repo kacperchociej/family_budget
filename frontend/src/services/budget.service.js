@@ -10,12 +10,18 @@ class BudgetService {
     getBudgetsByUrl(url) {
       return axios.get(url, { headers: authHeader() })
     }
-    getBudget() {}
+    getBudget(id) {
+      return axios.get(API_URL + id, { headers: authHeader() })
+    }
     addBudget() {}
     removeBudget() {}
     shareBudget() {}
-    getSharedPeople() {}
-    revokeBudgetAccess() {}
+    revokeBudgetAccess(id) {
+      return axios.delete(API_URL + 'revoke/' + id + '/', { headers: authHeader() })
+    }
+    getSharedPeople(id) {
+      return axios.get(API_URL + id + '/shared', { headers: authHeader() })
+    }
     getSharedBudget(id) {
       return axios.get(API_URL + 'shared/me/' + id, { headers: authHeader() })}
     getSharedBudgets() {

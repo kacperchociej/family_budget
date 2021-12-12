@@ -87,7 +87,10 @@ export default class BudgetsTable extends Component {
                 <td>{budget.incomes.length}</td>
                 <td>{budget.expenses.length}</td>
                 <td>{new Date(budget.created_at).toLocaleTimeString() + ' ' + new Date(budget.created_at).toLocaleDateString()}</td>
-                <td>TBA</td>
+                <td>
+                  <Link to={"budget/" + budget.pk} className="btn btn-outline-primary btn-sm">Show</Link>
+                  <Link to={"delete/" + budget.pk} className="btn btn-outline-danger btn-sm">Delete</Link>
+                </td>
               </tr>
             )}
           </tbody>
@@ -95,8 +98,8 @@ export default class BudgetsTable extends Component {
         <div className="container">
           {budgets.count !== null && <p>Total: {budgets.count} elements.</p>}
           <div className="btn-group" role="group" aria-label="Basic example">
-            {budgets.previous && <button type="button" className="btn btn-secondary" onClick={() => this.onClickPreviousNext(budgets.previous)}>Prev</button>}
-            {budgets.next && <button type="button" className="btn btn-secondary" onClick={() => this.onClickPreviousNext(budgets.next)}>Next</button>}
+            {budgets.previous && <button type="button" className="btn btn-secondary btn-sm" onClick={() => this.onClickPreviousNext(budgets.previous)}>Prev</button>}
+            {budgets.next && <button type="button" className="btn btn-secondary btn-sm" onClick={() => this.onClickPreviousNext(budgets.next)}>Next</button>}
           </div>
         </div>
       </div>
