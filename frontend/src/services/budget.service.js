@@ -13,8 +13,14 @@ class BudgetService {
     getBudget(id) {
       return axios.get(API_URL + id, { headers: authHeader() })
     }
-    addBudget() {
-
+    addBudget(data) {
+      return axios.post(API_URL, data, { headers: authHeader() })
+    }
+    getIncomeCategories() {
+      return axios.get(API_URL + 'income/categories/')
+    }
+    getExpenseCategories() {
+      return axios.get(API_URL + 'expense/categories/')
     }
     removeBudget(id) {
       return axios.delete(API_URL + id + '/', { headers: authHeader() })

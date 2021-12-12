@@ -13,6 +13,7 @@ import Logout from "./components/logout.component";
 import Register from "./components/register.component";
 import ShowSharedBudget from './components/budgets/showsharedbudget.component';
 import ShowBudget from './components/budgets/showbudget.component';
+import AddBudget from './components/budgets/addbudget.component';
 
 class App extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class App extends Component {
                     <Link to={"/budgets"} className="nav-link">Budgets</Link>
                   </li>
                   <li className='nav-item'>
-                    <Link to={"/budgets/new"} className="nav-link">Add new budget</Link>
+                    <Link to={"/new/budget/"} className="nav-link">Add new budget</Link>
                   </li>
               </div>
             )}
@@ -87,6 +88,7 @@ class App extends Component {
             <Route path="/register" component={Register} />
             <Route path="/shared/:id" component={ShowSharedBudget} />
             <Route path="/budget/:id" component={ShowBudget} />
+            <Route path="/new/budget/" component={AddBudget} />
           </div>
         </div>
       </div>

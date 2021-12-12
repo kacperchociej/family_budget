@@ -3,21 +3,35 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.mixins import ListModelMixin
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated, BasePermission, AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from apps.authentication.utils import get_shared_users, get_budgets_shared_with_me
 from apps.budget.filters import BudgetFilter, SharedBudgetFilter
-from apps.budget.models import Budget, SharedBudget
-from apps.budget.serializers import BudgetSerializer, GrantBudgetAccessSerializer, SharedBudgetSerializer
+from apps.budget.models import Budget, SharedBudget, IncomeCategory, ExpenseCategory
+from apps.budget.serializers import BudgetSerializer, GrantBudgetAccessSerializer, SharedBudgetSerializer, \
+    ExpenseCategorySerializer, IncomeCategorySerializer
 
 
 class IsOwner(BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user == obj.user
+
+
+class IncomeCategoryView(ListModelMixin, GenericViewSet):
+    queryset = IncomeCategory.objects.all()
+    serializer_class = IncomeCategorySerializer
+    permission_classes = [AllowAny, ]
+
+
+class ExpenseCategoryView(ListModelMixin, GenericViewSet):
+    queryset = ExpenseCategory.objects.all()
+    serializer_class = ExpenseCategorySerializer
+    permission_classes = [AllowAny, ]
 
 
 class BudgetViewSet(ModelViewSet):
