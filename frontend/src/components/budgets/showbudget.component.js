@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import BudgetService from "../../services/budget.service";
 import AuthService from "../../services/auth.service";
 import SharedPeople from "./budgetsharedwith.component";
+import ShareBudget from "./sharebudget.component";
 
 export default class ShowBudget extends Component {
   constructor(props) {
@@ -23,7 +24,6 @@ export default class ShowBudget extends Component {
         });
       },
       error => {
-        console.log(error.response.data);
         if (error.response.data.code === 'token_not_valid') {
           AuthService.logout().then(() => {
             this.props.history.push('/login');
@@ -105,11 +105,13 @@ export default class ShowBudget extends Component {
                   </tbody>
                 </table>
 
+                <ShareBudget history={this.props.history} budget_id={budget.pk}/>
                 <SharedPeople history={this.props.history} budget_id={budget.pk}/>
               </div>
             )}
           </div>
         )}
+        <br/>
       </div>
     )
   }

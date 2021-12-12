@@ -44,7 +44,10 @@ class BudgetViewSet(ModelViewSet):
         shared_by = request.user
         budget = self.get_object()
 
-        shared_budget_serializer = GrantBudgetAccessSerializer(data=request.data)
+        username = request.data.get('user', '')
+        user = get_object_or_404(User, username=username)
+
+        shared_budget_serializer = GrantBudgetAccessSerializer(data={'user': user.pk})
         shared_budget_serializer.is_valid(raise_exception=True)
         shared_budget_serializer.save(
             budget=budget,
