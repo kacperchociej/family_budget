@@ -27,6 +27,3 @@ class Command(BaseCommand):
             test_user.set_password(test_user_password)
             test_user.save()
             print('Test user created.')
-
-
-

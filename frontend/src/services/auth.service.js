@@ -26,7 +26,9 @@ class AuthService {
 
   refresh() {
     let refresh_token = JSON.parse(localStorage.getItem('refresh_token'));
-    console.log(refresh_token);
+    
+    // not enough time to add rotation to the frontend ;/
+
     return axios.post(API_URL + 'refresh/', {refresh_token: refresh_token})
     .then(response => {
       if (response.data.user) {
