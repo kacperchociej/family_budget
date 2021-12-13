@@ -1,12 +1,10 @@
 from django.urls import reverse
-from rest_framework.exceptions import ErrorDetail
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.test import APITestCase, APIClient
 
 from apps.authentication.tests.factories.user_factory import UserFactory
-from apps.budget.models import Budget, SharedBudget
-from apps.budget.serializers import BudgetSerializer
-from apps.budget.tests.factories.budget_factory import BudgetFactory, ExpenseFactory, IncomeFactory
+from apps.budget.models import SharedBudget
+from apps.budget.tests.factories.budget_factory import BudgetFactory
 
 
 class BudgetTestCase(APITestCase):

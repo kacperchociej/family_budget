@@ -73,7 +73,7 @@ class BudgetViewSet(ModelViewSet):
             status=HTTP_201_CREATED
         )
 
-    @action(detail=False, methods=['DELETE'], url_path='revoke/(?P<access_id>[\w\-]+)')
+    @action(detail=False, methods=['DELETE'], url_path='revoke/(?P<access_id>[\w\-]+)')  # noqa
     def revoke(self, request, access_id=None):
         user = request.user
         shared_budget = get_object_or_404(SharedBudget, pk=access_id)
@@ -112,7 +112,7 @@ class BudgetViewSet(ModelViewSet):
             status=HTTP_200_OK
         )
 
-    @action(detail=False, methods=['GET'], url_path='shared/me/(?P<access_id>[\w\-]+)')
+    @action(detail=False, methods=['GET'], url_path='shared/me/(?P<access_id>[\w\-]+)')  # noqa
     def get_shared_budget(self, request, access_id=None):
         user = request.user
         shared_budget = get_object_or_404(SharedBudget, pk=access_id)

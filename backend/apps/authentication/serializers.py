@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+import django.contrib.auth.password_validation as validators
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
@@ -7,7 +8,6 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
-import django.contrib.auth.password_validation as validators
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
